@@ -1,18 +1,15 @@
-// Fixed RecipeSearch Import Issue in React App
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './index.css';
+import Login from './Login';
+import Register from './Register';
 
 const RecipeSearch = ({ user }) => {
     const [query, setQuery] = useState('');
     const [recipes, setRecipes] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-
-    if (!user) {
-        return <h2 className="text-center text-2xl text-red-500 mt-10">Please log in to search for recipes.</h2>;
-    }
 
     const searchRecipes = async () => {
         if (!query) {
@@ -82,11 +79,24 @@ const App = () => {
 
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<RecipeSearch user={user} />} />
-                <Route path="/login" element={<Login setUser={setUser} />} />
-                <Route path="/register" element={<Register setUser={setUser} />} />
-            </Routes>
+            <div className="min-h-screen flex flex-col items-center bg-gray-50 p-6">
+                <nav className="w-full max-w-lg flex justify-between mb-6">
+                    <Link to="/" className="text-lg text-blue-600 hover:underline">Home</Link>
+                    {user ? (
+                        <span className="text-lg">Welcome, {user.username}</span>
+                    ) : (
+                        <div className="flex space-x-4">
+                            <Link to="/login" className="text-lg text-blue-600 hover:underline">Login</Link>
+                            <Link to="/register" className="text-lg text-blue-600 hover:underline">Register</Link>
+                        </div>
+                    )}
+                </nav>
+                <Routes>
+                    <Route path="/" element={<RecipeSearch user={user} />} />
+                    <Route path="/login" element={<Login setUser={setUser} />} />
+                    <Route path="/register" element={<Register setUser={setUser} />} />
+                </Routes>
+            </div>
         </Router>
     );
 };
